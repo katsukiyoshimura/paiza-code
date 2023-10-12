@@ -1,52 +1,60 @@
 <?php
-    $input_line = trim(fgets(STDIN));
-    [$n, $m, $x] = explode(" ", $input_line);
-    
-    $array = [];
-    
-    for ($i = 0; $i < $n; $i++) {
-        $input = trim(fgets(STDIN));
-        $array[] = explode(" ", $input);
-    }
-    
-    $copy = [];
-    // 配列の値を0にセットする
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $m; $j++) {
-            $copy[$i][$j] = 0;
+
+function hasAdjacentSameColor($board, $i, $j, $n, $m) {
+    $currentColor = $board[$i][$j];
+    $directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+    foreach ($directions as $dir) {
+        $ni = $i + $dir[0];
+        $nj = $j + $dir[1];
+
+        if ($ni >= 0 && $ni < $n && $nj >= 0 && $nj < $m && $board[$ni][$nj] === $currentColor) {
+            return true;
         }
     }
-    
-    // 上下左右に同じ文字があれば1にセットする
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $m; $j++) {
-            if (($array[$i][$j] == $array[$i+1][$j]) || ($array[$i][$j] == $array[$i-1][$j]) || ($array[$i][$j] == $array[$i][$j+1]) || ($array[$i][$j] == $array[$i][$j-1])) {
-                $copy[$i][$j]++;
-            }
-        }
-    }
-    
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $m; $j++) {
-            if ($copy[$i][$j] == 1) {
-                $array[$i][$j] = "#";
-            }
-        }
-    }
-    
-    for ($k = 0; $k < $n; $k++) {
-        for ($i = $n-2; $i >= 0; $i--) {
-            for ($j = 0; $j < $m; $j++) {
-                if ($array[$i+1][$j] == "#") {
-                    $array[$i+1][$j] = $array[$i][$j];
-                    $array[$i][$j] = "#";
+    return false;
+}
+
+function dropDown($board, $n, $m) {
+    for ($j = 0; $j < $m; $j++) {
+        $write = $n - 1;
+        for ($i = $n - 1; $i >= 0; $i--) {
+            if ($board[$i][$j] !== '#') {
+                $board[$write][$j] = $board[$i][$j];
+                if ($write !== $i) {
+                    $board[$i][$j] = '#';
                 }
+                $write--;
             }
         }
     }
-    
-    for ($i = 0; $i < $n; $i++) {
-        $output = implode(" ", $array[$i]);
-        echo $output."\n";
-    } 
+    return $board;
+}
+
+[$n, $m, $x] = explode(" ", trim(fgets(STDIN)));
+
+$board = [];
+for ($i = 0; $i < $n; $i++) {
+    $board[] = explode(" ", trim(fgets(STDIN)));
+}
+
+$toBeRemoved = [];
+for ($i = 0; $i < $n; $i++) {
+    for ($j = 0; $j < $m; $j++) {
+        if (hasAdjacentSameColor($board, $i, $j, $n, $m)) {
+            $toBeRemoved[] = [$i, $j];
+        }
+    }
+}
+
+foreach ($toBeRemoved as $pos) {
+    $board[$pos[0]][$pos[1]] = '#';
+}
+
+$board = dropDown($board, $n, $m);
+
+foreach ($board as $row) {
+    echo implode(" ", $row) . "\n";
+}
+
 ?>

@@ -1,56 +1,43 @@
 <?php
-    // 自分の得意な言語で
-    // Let's チャレンジ！！
     $input_line = trim(fgets(STDIN));
     [$h, $w, $t] = explode(" ", $input_line);
     
-    $input = [];
-    for ($i = 0; $i < $h+$w; $i++) {
+    $participants = [];
+
+    // 初期位置とプレゼントの情報を設定
+    for ($i = 0; $i < $h + $w; $i++) {
         if ($i < $h) {
-            $input[$i][0] = "M";
-            $input[$i][1] = $i+1;
-            $input[$i][2] = 0; // 初期x座標
-            $input[$i][3] = $i+1; // y座標
+            $participants[] = ["type" => "M", "id" => $i + 1, "x" => 0, "y" => $i + 1];
         } else {
-            $input[$i][0] = "F";
-            $input[$i][1] = $i-$h+1;
-            $input[$i][2] = $i-$h+1; // x座標
-            $input[$i][3] = 0; // 初期y座標
+            $participants[] = ["type" => "F", "id" => $i - $h + 1, "x" => $i - $h + 1, "y" => 0];
         }
     }
-    
+
     for ($i = 0; $i < $t; $i++) {
+        // 男性の移動
+        $menDirection = floor($i/$w) % 2 == 0 ? 1 : -1;
         for ($j = 0; $j < $h; $j++) {
-            if (floor($i/$w) % 2 == 0) {
-                $input[$j][2]++;
-            } else {
-                $input[$j][2]--;
-            }
+            $participants[$j]['x'] += $menDirection;
         }
         
-        for ($k = $h; $k < $h+$w; $k++) {
-            if (floor($i/$h) % 2 == 0) {
-                $input[$k][3]++;
-            } else {
-                $input[$k][3]--;
-            }
+        // 女性の移動
+        $womenDirection = floor($i/$h) % 2 == 0 ? 1 : -1;
+        for ($k = $h; $k < $h + $w; $k++) {
+            $participants[$k]['y'] += $womenDirection;
         }
         
+        // プレゼントの交換を確認
         for ($j = 0; $j < $h; $j++) {
-            for ($k = $h; $k < $h+$w; $k++) {
-                if (($input[$j][2] == $input[$k][2]) && ($input[$j][3] == $input[$k][3])){
-                    $tmp[0] = $input[$j][0];
-                    $tmp[1] = $input[$j][1];
-                    $input[$j][0] = $input[$k][0];
-                    $input[$j][1] = $input[$k][1];
-                    $input[$k][0] = $tmp[0];
-                    $input[$k][1] = $tmp[1];
+            for ($k = $h; $k < $h + $w; $k++) {
+                if ($participants[$j]['x'] == $participants[$k]['x'] && $participants[$j]['y'] == $participants[$k]['y']) {
+                    [$participants[$j]['type'], $participants[$k]['type']] = [$participants[$k]['type'], $participants[$j]['type']];
+                    [$participants[$j]['id'], $participants[$k]['id']] = [$participants[$k]['id'], $participants[$j]['id']];
                 }
             }
         }
     }
-    
-    for ($i = 0; $i < $h+$w; $i++) {
-        echo $input[$i][0]. " ". $input[$i][1]."\n";
+
+    foreach ($participants as $participant) {
+        echo $participant['type'] . " " . $participant['id'] . "\n";
     }
 ?>

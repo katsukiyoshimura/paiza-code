@@ -10,49 +10,27 @@
         $input[] = str_split($a);
     }
     
-    //横にk個の数を抽出
-    $yoko = [];
+    $maxNum = -1;
     for ($i = 0; $i < $h; $i++) {
-        for ($l = 0; $l <= $w-$k; $l++) {
-            for ($j = $l; $j < $k+$l; $j++) {
-                $yoko[$i][$l][] = $input[$i][$j];
+        for ($j = 0; $j < $w; $j++) {
+            // 上から下
+            if ($i + $k <= $h) {
+                $num = "";
+                for ($m = 0; $m < $k; $m++) {
+                    $num .= $input[$i + $m][$j];
+                }
+                $maxNum = max($maxNum, intval($num));
+            }
+            // 左から右
+            if ($j + $k <= $w) {
+                $num = "";
+                for ($m = 0; $m < $k; $m++) {
+                    $num .= $input[$i][$j + $m];
+                }
+                $maxNum = max($maxNum, intval($num));
             }
         }
     }
     
-    //縦にk個の数を抽出
-    $tate = [];
-    for ($i = 0; $i < $w; $i++) {
-        for ($l = 0; $l <= $h-$k; $l++) {
-            for ($j = $l; $j < $k+$l; $j++) {
-                $tate[$i][$l][] = $input[$j][$i];
-            }
-        }
-    }
-    
-    $get = [];
-    //横にk桁の数を抽出
-    for ($i = 0; $i < $h; $i++) {
-        for ($j = 0; $j <= $w-$k; $j++) {
-            $a = 0;
-            for ($l = 0; $l < $k; $l++) {
-                $a +=  $yoko[$i][$j][$l] * (10**($k-$l-1));
-                
-            }
-            $get[] = $a;
-        }
-    }
-    
-    //縦にk桁の数を抽出
-    for ($i = 0; $i < $w; $i++) {
-        for ($j = 0; $j <= $h-$k; $j++) {
-            $a = 0;
-            for ($l = 0; $l < $k; $l++) {
-                $a +=  $tate[$i][$j][$l] * (10**($k-$l-1));
-                
-            }
-            $get[] = $a;
-        }
-    }
-    echo max($get);
+    echo $maxNum;
 ?>
