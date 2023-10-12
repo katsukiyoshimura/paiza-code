@@ -13,6 +13,7 @@
     }
    
    $length = [];
+   $max_length = [];
     // 各列について最大の文字数を得る
     for ($i = 0; $i < $column_num; $i++) {
         $length[$i][] = strlen($column_name[$i]);
