@@ -1,44 +1,56 @@
 <?php
-    getInfo();
-    outputPosition($width, $height, $num, $x, $y);
-    
-    function getInfo() {
-        global $width, $height, $num, $x, $y;
-        [$width, $height, $num] = explode(" ", trim(fgets(STDIN)));
-        [$x, $y] = explode(" ", trim(fgets(STDIN)));
+
+class Position {
+    private $width;
+    private $height;
+    private $num;
+    private $x;
+    private $y;
+
+    public function __construct() {
+        $this->setInfo();
+        $this->outputPosition();
     }
-    
-    function moveWithinBounds($position, $max, $delta) {
+
+    private function setInfo() {
+        [$this->width, $this->height, $this->num] = explode(" ", trim(fgets(STDIN)));
+        [$this->x, $this->y] = explode(" ", trim(fgets(STDIN)));
+    }
+
+    private function moveWithinBounds($position, $max, $delta) {
         $position += $delta;
-        $position %= $max; // 余りを出す
+        $position %= $max;
         if ($position < 0) {
-            $position += $max; 
+            $position += $max;
         }
         return $position;
     }
-   
-    function outputPosition($width, $height, $num, $x, $y) {
-        for ($i = 0; $i < $num; $i++) {
+
+    private function outputPosition() {
+        for ($i = 0; $i < $this->num; $i++) {
             $move = trim(fgets(STDIN));
             [$direct, $distance] = explode(" ", $move);
-        
+
             switch ($direct) {
                 case "U":
-                    $y = moveWithinBounds($y, $height, $distance);
+                    $this->y = $this->moveWithinBounds($this->y, $this->height, $distance);
                     break;
                 case "D":
-                    $y = moveWithinBounds($y, $height, -$distance);
+                    $this->y = $this->moveWithinBounds($this->y, $this->height, -$distance);
                     break;
                 case "R":
-                    $x = moveWithinBounds($x, $width, $distance);
+                    $this->x = $this->moveWithinBounds($this->x, $this->width, $distance);
                     break;
                 case "L":
-                    $x = moveWithinBounds($x, $width, -$distance);
+                    $this->x = $this->moveWithinBounds($this->x, $this->width, -$distance);
                     break;
             }
         }
-        
-        echo $x . " " . $y;
+
+        echo $this->x . " " . $this->y;
     }
+}
+
+new Position();
 
 ?>

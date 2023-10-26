@@ -1,49 +1,55 @@
 <?php
-    getAreaInfo();
-    getInitData();
-    extendLine($height, $input);
-    // print_r($input);
-    extendColumn($height, $width, $input);
-    output($height, $input);
+ 
+ class Table {   
+    private  $height;
+    private $width;
+    private $input;
     
-    function getAreaInfo() {
-        global $height, $width;
-        [$height, $width] = explode(" ", trim(fgets(STDIN)));
+    public function __construct() {
+        $this->setAreaInfo();
+        $this->setInitData();
+        $this->extendLine();
+        $this->extendColumn();
+        $this->output();
     }
     
-    function getInitData() {
-        global $input;
-        $input = [];
+    private function setAreaInfo() {
+        [$this->height, $this->width] = explode(" ", trim(fgets(STDIN)));
+    }
+    
+    private function setInitData() {
+        $this->input = [];
         for ($line = 0; $line < 2; $line++) {
-            $input[] = explode(" ", trim(fgets(STDIN)));
+            $this->input[] = explode(" ", trim(fgets(STDIN)));
         }
     }
 
-    function calculateAP($a, $b) {
+    private function calculateAP($a, $b) {
         return $b * 2 - $a;
     }
 
-    function extendLine($height, $input) {
-        global $input;
-        for ($line = 2; $line < $height; $line++) {
+    private function extendLine() {
+        for ($line = 2; $line < $this->height; $line++) {
             for ($column = 0; $column < 2; $column++) {
-                $input[$line][$column] = calculateAP($input[$line-2][$column], $input[$line-1][$column]);
+                $this->input[$line][$column] = $this->calculateAP($this->input[$line-2][$column], $this->input[$line-1][$column]);
             }
         }
     }
     
-    function extendColumn($height, $width, $input) {
-        global $input;
-        for ($line = 0; $line < $height; $line++) {
-            for ($column = 2; $column < $width; $column++) {
-                $input[$line][$column] = calculateAP($input[$line][$column-2], $input[$line][$column-1]);
+    private function extendColumn() {
+        for ($line = 0; $line < $this->height; $line++) {
+            for ($column = 2; $column < $this->width; $column++) {
+                $this->input[$line][$column] = $this->calculateAP($this->input[$line][$column-2], $this->input[$line][$column-1]);
             }
         }
     }
     
-    function output($height, $input) {
-        for ($i = 0; $i < $height; $i++) {
-            echo implode(" ", $input[$i])."\n";
+    private function output() {
+        for ($i = 0; $i < $this->height; $i++) {
+            echo implode(" ", $this->input[$i])."\n";
         }
     }
+}
+
+new Table();
 ?>
