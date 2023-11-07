@@ -1,21 +1,15 @@
 <?php
- 
      class Table {   
         private $height;
         private $width;
         private $input;
-        
-        public function setAreaInfo() {
-            [$this->height, $this->width] = explode(" ", trim(fgets(STDIN)));
+
+        public function __construct($height, $width, $input) {
+            $this->height = $height;
+            $this->width = $width;
+            $this->input = $input;
         }
-        
-        public function setInitData() {
-            $this->input = [];
-            for ($line = 0; $line < 2; $line++) {
-                $this->input[] = explode(" ", trim(fgets(STDIN)));
-            }
-        }
-    
+            
         public function calculateAP($a, $b) {
             return $b * 2 - $a;
         }
@@ -36,17 +30,23 @@
             }
         }
         
-        public function output() {
-            for ($i = 0; $i < $this->height; $i++) {
-                echo implode(" ", $this->input[$i])."\n";
-            }
+        public function arrange() {
+            return $this->input;
         }
     }
     
-    $autoMadeTable = new Table();
-    $autoMadeTable->setAreaInfo();
-    $autoMadeTable->setInitData();
+    [$height, $width] = explode(" ", trim(fgets(STDIN)));
+
+    $input = [];
+    for ($line = 0; $line < 2; $line++) {
+        $input[] = explode(" ", trim(fgets(STDIN)));
+    }
+    $autoMadeTable = new Table($height, $width, $input);
     $autoMadeTable->extendLine();
     $autoMadeTable->extendColumn();
-    $autoMadeTable->output();
+    $extendedTable = $autoMadeTable->arrange();
+    
+    foreach ($extendedTable as $line) {
+    echo implode(" ", $line)."\n";
+}
 ?>

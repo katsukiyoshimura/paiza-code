@@ -7,9 +7,12 @@
         private $x;
         private $y;
 
-        public function setInfo() {
-            [$this->width, $this->height, $this->num] = explode(" ", trim(fgets(STDIN)));
-            [$this->x, $this->y] = explode(" ", trim(fgets(STDIN)));
+        public function __construct($width, $height, $num, $x, $y) {
+            $this->width = $width;
+            $this->height = $height;
+            $this->num = $num;
+            $this->x = $x;
+            $this->y = $y;
         }
 
         public function moveWithinBounds($position, $max, $delta) {
@@ -21,7 +24,7 @@
             return $position;
         }
 
-        public function outputPosition() {
+        public function findLastPosition() {
             for ($i = 0; $i < $this->num; $i++) {
                 $move = trim(fgets(STDIN));
                 [$direct, $distance] = explode(" ", $move);
@@ -42,11 +45,13 @@
                 }
             }
 
-            echo $this->x . " " . $this->y;
+            return $this->x . " " . $this->y;
         }
     }
 
-    $pos = new Position();
-    $pos->setInfo();
-    $pos->outputPosition();
+    [$width, $height, $num] = explode(" ", trim(fgets(STDIN)));
+    [$x, $y] = explode(" ", trim(fgets(STDIN)));
+
+    $pos = new Position($width, $height, $num, $x, $y);
+    echo $pos->findLastPosition();
 ?>

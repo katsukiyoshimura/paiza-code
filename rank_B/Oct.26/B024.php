@@ -1,12 +1,13 @@
 <?php
     class Area {
         private $radius;
-        
-        function setRadius() {
-            $this->radius = fgets(STDIN);
+        private $innerPart;
+
+        public function __construct($radius) {
+            $this->radius = $radius;
         }
-        
-        function calculatePaintedArea() {
+                
+        public function calculatePaintedArea() {
             $this->innerPart = 0;
             for ($x = 1; $x <= ceil($this->radius); $x++) {
                for ($y = 1; $y <= ceil($this->radius); $y++) {
@@ -17,13 +18,13 @@
             }
         }
         
-        function outputTotalPaintedArea() {
-            echo $this->innerPart * 4;
+        function calculateTotalPaintedArea() {
+            return $this->innerPart * 4;
         }
     }
     
-    $paintedArea = new Area();
-    $paintedArea->setRadius();
+    $radius = fgets(STDIN);
+    $paintedArea = new Area($radius);
     $paintedArea->calculatePaintedArea();
-    $paintedArea->outputTotalPaintedArea();
+    echo $paintedArea->getTotalPaintedArea();
 ?>

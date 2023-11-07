@@ -4,16 +4,12 @@
         private $width;
         private $digit;
         private $input;
-        
-        public function setInfo() {
-            [$this->height, $this->width, $this->digit] = explode(" ", trim(fgets(STDIN)));
-        }
 
-        public function setData() {
-            $this->input = [];
-            for ($line = 0; $line < $this->height; $line++) {
-                $this->input[] = str_split(trim(fgets(STDIN)));
-            }
+        public function __construct($height, $width, $digit, $input) {
+            $this->height = $height;
+            $this->width = $width;
+            $this->digit = $digit;
+            $this->input = $input;
         }
 
         public function setNum($array0, $array1) {
@@ -24,7 +20,7 @@
             $maxNum = max($maxNum, intval($num));
         }
         
-        public function outputMaxNum() {
+        public function findMaxNum() {
             $maxNum = -1;
             for ($line = 0; $line < $this->height; $line++) {
                 for ($column = 0; $column < $this->width; $column++) {
@@ -46,13 +42,18 @@
                     }
                 }
             }
-            echo $maxNum;
+            return $maxNum;
         }
     }
+
+    [$height, $width, $digit] = explode(" ", trim(fgets(STDIN)));
+
+    $input = [];
+    for ($line = 0; $line < $height; $line++) {
+        $input[] = str_split(trim(fgets(STDIN)));
+    }
+    $num = new Number($height, $width, $digit, $input);
     
-    $num = new Number();
-    $num->setInfo();
-    $num->setData();
-    $num->outputMaxNum();
+    echo $num->findMaxNum();
    
 ?>
